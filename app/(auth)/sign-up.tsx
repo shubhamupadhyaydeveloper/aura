@@ -19,8 +19,6 @@ import { SignUpschema } from "@/helpers/type";
 import { signUpFields } from "@/helpers/constant";
 import SharedButton from "@/components/shared/SharedButton";
 import {router} from 'expo-router'
-import { firebaseAuth } from "@/FirebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUp = () => {
   const {
@@ -32,9 +30,15 @@ const SignUp = () => {
   
   const onSubmit = async (data:FieldValues) => {
     try {
-      const response = await createUserWithEmailAndPassword(firebaseAuth, data['email'],data['password'])
- 
-      
+      const request = await fetch("http://192.168.1.109:3000/user/signup",{
+        method : "POST",
+        headers : {
+          "Content-type" : "application/json"
+        },
+        body : JSON.stringify(data)
+      })     
+      const response = await request.json()
+      console.log(response)
     } catch (error:any) {
        Alert.alert("signup failed", error?.message)
     } finally {

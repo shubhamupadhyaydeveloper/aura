@@ -19,8 +19,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SharedTextInput from "@/components/shared/SharedTextInput";
 import { SignInSchema } from "@/helpers/type";
 import { signInFields } from "@/helpers/constant";
-import { firebaseAuth } from "@/FirebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
 import Toast from 'react-native-toast-message';
 
@@ -35,7 +33,14 @@ const SignIn = () => {
   
   const onSubmit = async (data:FieldValues) => {
      try {
-      const response = await signInWithEmailAndPassword(firebaseAuth,data['email'],data['password'])
+      const request = await fetch("http://192.168.1.109:3000/user/login",{
+        method : "POST",
+        headers : {
+          "Content-type" : "application/json"
+        },
+        body : JSON.stringify(data)
+      })
+      console.log("This is signin",request)
       router.push("/home")
      } catch (error:any) {
       Toast.show({
